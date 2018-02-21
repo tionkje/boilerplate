@@ -1,0 +1,51 @@
+<!doctype html>
+<html class="no-js" lang="">
+  <head>
+    <meta charset="utf-8">
+    <title>BoilerPlate</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  </head>
+  <body>
+    <p>Hello world! This is a Boilerplate.</p>
+    <div>
+      <div> Post result: </div>
+      <div id="postresult">nothing yet</div>
+    </div>
+    <script>
+
+// creates a node (err,result) style api to serverside functions
+function createServerApi(api){
+  var result = {};
+  api.forEach(function(action){
+    result[action] = function(params, cb){
+      fetch('./api/?'+action, {
+        method:'post',
+        body:JSON.stringify({action,params}),
+        headers: new Headers({ 'Content-Type': 'application/json' })
+      })
+      .then(r=>r.json())
+        .then(result=>{
+          if(!result.ok) return cb(new Error(result.err));
+          cb(null,result.res);
+        }, err=>cb(err));
+    };
+  });
+  return result;
+}
+
+var serverApi = createServerApi(['Test']); // supply a list of server functions
+
+
+// call Test function and write reply into div
+serverApi.Test({}, function(err, res){
+  if(err) { console.error(err); postresult.innerHTML = err.message; return; }
+  console.log('result:', res);
+  postresult.innerHTML = res;
+});
+
+    </script>
+  </body>
+</html>
+

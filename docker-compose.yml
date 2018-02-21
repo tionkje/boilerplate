@@ -1,0 +1,20 @@
+version : '3'
+services:
+  node:
+    image: "node"
+    user: "node"
+    working_dir: "/home/node/app"
+    volumes:
+      - ./:/home/node/app
+    ports:
+      - "8080"
+    command: "node index.js"
+  nginx:
+    image: "nginx"
+    volumes:
+      - ./default.nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./static:/usr/share/nginx/html
+    ports:
+      - "80:80"
+
+
