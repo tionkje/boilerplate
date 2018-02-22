@@ -14,6 +14,13 @@ server.addHandler('/', function(params, cb, req, res){
   return serverApi[params.body.action](params.body.params, params, cb, req, res);
 });
 
+// close server when we receive signal
+process.on('SIGTERM', function(){
+  log.trace('Received SIGTERM, closing httpserver');
+  server.server.close();
+});
+
+
 
 var serverApi = {};
 
